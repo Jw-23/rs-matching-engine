@@ -1,0 +1,47 @@
+[package]
+name = "rs-matching-engine"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["std-net"]
+std-net = []
+tokio-net = []
+
+[dependencies]
+# 无堆数组
+async-trait = "0.1.89"
+arrayvec = "0.7.6"
+# 把线程绑定在核心上
+core_affinity = "0.8.3"
+dashmap = "6.1.0"
+foldhash = "0.2.0"
+# derive_builder = "0.20.2"
+libc = "0.2.184"
+mach2 = "0.6.0"
+thiserror = "2.0.18"
+tokio = { version = "1.51.1", features = [
+    "net",
+    "rt",
+    "macros",
+    "rt-multi-thread",
+    "sync","mio", "io-util", "time"
+] }
+rand = "0.10.1"
+crossbeam-utils = "0.8.21"
+[dev-dependencies]
+criterion = { version = "0.8", features = ["html_reports"] }
+
+[[bench]]
+name = "bench_order_book"
+harness = false
+
+[[bench]]
+name = "cpp_like_bench"
+harness = false
+[profile.release]
+debug = true          # 包含调试符号
+split-debuginfo = "unpacked" # 如果是 macOS，设置为 "unpacked"
+debug-assertions = false
+overflow-checks = false
+lto = false           # 暂时关闭 LTO，防止过度内联导致栈帧模糊
